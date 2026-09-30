@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShahanFx - Sign Up</title>
+<style>
+body{font-family:Arial,sans-serif;background:#121212;color:#fff;margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh}
+.container{width:100%;max-width:400px;background:#1e1e1e;padding:25px;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
+input,button{width:100%;padding:12px;margin:10px 0;border:none;border-radius:4px;box-sizing:border-box}
+input{background:#2a2a2a;color:#fff;font-size:16px}
+button{background:#2196F3;color:#fff;font-weight:bold;cursor:pointer;font-size:16px}
+button:hover{background:#0b7dda}
+.link-btn{background:transparent;color:#2196F3;text-decoration:underline;cursor:pointer;margin-top:5px}
+#msg{text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Create Account</h2>
+<input type="text" id="username" placeholder="Username">
+<input type="email" id="email" placeholder="Email Address">
+<input type="password" id="password" placeholder="Password">
+<button onclick="signup()">Sign Up</button>
+<button class="link-btn" onclick="goToLogin()">Back to Login</button>
+<p id="msg"></p>
+</div>
+<script>
+function signup(){
+let u = document.getElementById('username').value.trim();
+let e = document.getElementById('email').value.trim();
+let p = document.getElementById('password').value.trim();
+let msg = document.getElementById('msg');
+
+if(!u || !e || !p){
+msg.style.color = '#f44336';
+msg.innerText = 'Please fill all fields';
+return;
+}
+
+let users = JSON.parse(localStorage.getItem('shahan_users_db')) || [];
+let exists = users.some(user => user.email === e || user.username === u);
+
+if(exists){
+msg.style.color = '#f44336';
+msg.innerText = 'Username or Email already exists';
+return;
+}
+
+users.push({username: u, email: e, password: p});
+localStorage.setItem('shahan_users_db', JSON.stringify(users));
+
+// زیادکردنی ژمارەی میمبەرەکان بە خۆکارانە کاتێک کەسێک خۆی تۆمار دەکات
+let members = localStorage.getItem('shahan_members') ? parseInt(localStorage.getItem('shahan_members')) : 150;
+localStorage.setItem('shahan_members', members + 1);
+
+msg.style.color = '#4CAF50';
+msg.innerText = 'Account created successfully! Redirecting...';
+
+setTimeout(() => {
+window.location.href = 'index.html';
+}, 1500);
+}
+function goToLogin(){
+window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
