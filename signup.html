@@ -50,7 +50,6 @@ return;
 users.push({username: u, email: e, password: p});
 localStorage.setItem('shahan_users_db', JSON.stringify(users));
 
-// زیادکردنی ژمارەی میمبەرەکان بە خۆکارانە کاتێک کەسێک خۆی تۆمار دەکات
 let members = localStorage.getItem('shahan_members') ? parseInt(localStorage.getItem('shahan_members')) : 150;
 localStorage.setItem('shahan_members', members + 1);
 
