@@ -6,42 +6,46 @@
 <title>ShahanFx - Trading Dashboard</title>
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <style>
-body{font-family:Arial,sans-serif;background:#121212;color:#fff;margin:0;padding:0;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.admin-panel{background:#1e1e1e;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333}
+body, html{margin:0;padding:0;width:100%;height:100%;background:#121212;color:#fff;font-family:Arial,sans-serif;overflow:hidden;display:flex;flex-direction:column}
+.admin-panel{background:#1e1e1e;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;z-index:10;box-sizing:border-box;width:100%}
 .flex-row{display:flex;gap:10px;align-items:center}
-button{padding:8px 15px;border:none;border-radius:4px;font-weight:bold;cursor:pointer;color:#fff}
+button{padding:6px 12px;border:none;border-radius:4px;font-weight:bold;cursor:pointer;color:#fff}
 .btn-add{background:#4CAF50}
 .btn-rem{background:#f44336}
 .btn-out{background:#ff9800}
-#chart-container{flex:1;width:100%}
+#chart-container{flex:1;width:100%;height:100%}
 .hidden{display:none !important}
 </style>
 </head>
 <body>
 <div id="admin-box" class="admin-panel hidden">
 <div class="flex-row">
-<span>Total Members: <strong id="member-count">0</strong></span>
+<span>Members: <strong id="member-count">0</strong></span>
 <button class="btn-add" onclick="changeMembers(1)">+ Add</button>
 <button class="btn-rem" onclick="changeMembers(-1)">- Remove</button>
 </div>
 <button class="btn-out" onclick="logout()">Logout</button>
 </div>
+
+<div id="user-box" class="admin-panel hidden">
+<span>Welcome, User</span>
+<button class="btn-out" onclick="logout()">Logout</button>
+</div>
+
 <div id="chart-container"></div>
+
 <script>
 let status = localStorage.getItem('shahan_logged');
 if(!status){
 window.location.href = 'index.html';
 }
 let members = localStorage.getItem('shahan_members') ? parseInt(localStorage.getItem('shahan_members')) : 150;
+
 if(status === 'admin'){
 document.getElementById('admin-box').classList.remove('hidden');
 updateMemberDisplay();
 } else {
-// بۆ بەکارهێنەری ئاسایی تەنها دوگمەی لۆگ ئۆت نیشان دەدەین یان مینیۆیەک
-let userBar = document.createElement('div');
-userBar.className = 'admin-panel';
-userBar.innerHTML = `<span>Welcome, User</span> <button class="btn-out" onclick="logout()">Logout</button>`;
-document.body.insertBefore(userBar, document.getElementById('chart-container'));
+document.getElementById('user-box').classList.remove('hidden');
 }
 
 new TradingView.widget({
