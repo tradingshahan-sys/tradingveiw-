@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShahanFx - Login</title>
+<title>twanafx - Login</title>
 <style>
 body{font-family:Arial,sans-serif;background:#121212;color:#fff;margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh}
 .container{width:100%;max-width:400px;background:#1e1e1e;padding:25px;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
@@ -30,7 +30,6 @@ let e = document.getElementById('email').value.trim();
 let p = document.getElementById('password').value.trim();
 let err = document.getElementById('error-msg');
 
-// پشکنینی ئەدیمینی سەرەکی
 if((e === 'twanafx' || e === 'twanafx@gmail.com') && p === 'twanafx'){
 localStorage.setItem('shahan_logged', 'admin');
 localStorage.setItem('shahan_user', 'twanafx');
@@ -38,7 +37,6 @@ window.location.href = 'dashboard.html';
 return;
 }
 
-// پشکنینی بەکارهێنەرانی تۆمارکراو لەناو LocalStorage
 let users = JSON.parse(localStorage.getItem('shahan_users_db')) || [];
 let foundUser = users.find(u => (u.email === e || u.username === e) && u.password === p);
 
