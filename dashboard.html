@@ -3,42 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShahanFx - Trading Dashboard</title>
+<title>WILDFIRE - VIP Trading Dashboard</title>
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <style>
-body, html{margin:0;padding:0;width:100%;height:100%;background:#121212;color:#fff;font-family:Arial,sans-serif;overflow:hidden;display:flex;flex-direction:column}
-.admin-panel{background:#1e1e1e;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;z-index:10;box-sizing:border-box;width:100%}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,sans-serif}
+body, html{width:100%;height:100%;background:#080706;color:#fff;overflow:hidden;display:flex;flex-direction:column}
+.admin-panel{background:rgba(20, 16, 12, 0.92);backdrop-filter:blur(10px);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255, 120, 0, 0.35);box-shadow:0 4px 20px rgba(0,0,0,0.8);z-index:10;width:100%}
+.brand-title{font-size:18px;font-weight:800;letter-spacing:1px;color:#fff;display:flex;align-items:center;gap:8px}
+.brand-title span{color:#ff7700;text-shadow:0 0 8px rgba(255,119,0,0.6)}
+.vip-tag{background:linear-gradient(135deg, #ff8c00, #ff4500);color:#000;font-size:10px;font-weight:900;padding:3px 8px;border-radius:12px;text-transform:uppercase}
 .flex-row{display:flex;gap:10px;align-items:center}
-button{padding:6px 12px;border:none;border-radius:4px;font-weight:bold;cursor:pointer;color:#fff}
-.btn-add{background:#4CAF50}
-.btn-rem{background:#f44336}
-.btn-out{background:#ff9800}
+.stat-box{font-size:14px;color:#d4af37;font-weight:600}
+.stat-box strong{color:#fff;font-size:16px}
+button{padding:8px 14px;border:none;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer;color:#fff;transition:all 0.3s ease}
+.btn-add{background:linear-gradient(135deg, #00c853, #009624);box-shadow:0 0 10px rgba(0,200,83,0.3)}
+.btn-add:hover{transform:scale(1.05)}
+.btn-rem{background:linear-gradient(135deg, #ff1744, #d50000);box-shadow:0 0 10px rgba(255,23,68,0.3)}
+.btn-rem:hover{transform:scale(1.05)}
+.btn-out{background:linear-gradient(135deg, #ff8c00, #e63900);box-shadow:0 0 12px rgba(255,140,0,0.4);letter-spacing:0.5px}
+.btn-out:hover{transform:scale(1.05);background:linear-gradient(135deg, #ffa31a, #ff4500)}
 #chart-container{flex:1;width:100%;height:100%}
 .hidden{display:none !important}
 </style>
 </head>
 <body>
 <div id="admin-box" class="admin-panel hidden">
+<div class="brand-title">
+WILD<span>FIRE</span> <span class="vip-tag">ADMIN VIP</span>
+</div>
 <div class="flex-row">
-<span>Members: <strong id="member-count">0</strong></span>
+<span class="stat-box">VIP Members: <strong id="member-count">0</strong></span>
 <button class="btn-add" onclick="changeMembers(1)">+ Add</button>
 <button class="btn-rem" onclick="changeMembers(-1)">- Remove</button>
 </div>
 <button class="btn-out" onclick="logout()">Logout</button>
 </div>
-
 <div id="user-box" class="admin-panel hidden">
-<span>Welcome, User</span>
+<div class="brand-title">
+WILD<span>FIRE</span> <span class="vip-tag">VIP TERMINAL</span>
+</div>
+<div class="flex-row">
+<span class="stat-box" id="welcome-msg">Welcome, VIP User</span>
 <button class="btn-out" onclick="logout()">Logout</button>
 </div>
-
+</div>
 <div id="chart-container"></div>
-
 <script>
 let status = localStorage.getItem('shahan_logged');
+let activeUser = localStorage.getItem('shahan_user') || 'User';
+
 if(!status){
 window.location.href = 'index.html';
 }
+
 let members = localStorage.getItem('shahan_members') ? parseInt(localStorage.getItem('shahan_members')) : 150;
 
 if(status === 'admin'){
@@ -46,18 +63,19 @@ document.getElementById('admin-box').classList.remove('hidden');
 updateMemberDisplay();
 } else {
 document.getElementById('user-box').classList.remove('hidden');
+document.getElementById('welcome-msg').innerText = 'Welcome, VIP ' + activeUser;
 }
 
 new TradingView.widget({
 "width": "100%",
 "height": "100%",
-"symbol": "FX:EURUSD",
+"symbol": "OANDA:XAUUSD",
 "interval": "D",
 "timezone": "Etc/UTC",
 "theme": "dark",
 "style": "1",
 "locale": "en",
-"toolbar_bg": "#f1f3f6",
+"toolbar_bg": "#080706",
 "enable_publishing": false,
 "allow_symbol_change": true,
 "container_id": "chart-container"
@@ -69,9 +87,11 @@ if(members < 0) members = 0;
 localStorage.setItem('shahan_members', members);
 updateMemberDisplay();
 }
+
 function updateMemberDisplay(){
 document.getElementById('member-count').innerText = members;
 }
+
 function logout(){
 localStorage.removeItem('shahan_logged');
 localStorage.removeItem('shahan_user');
