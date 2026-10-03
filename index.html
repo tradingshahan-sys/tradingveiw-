@@ -8,8 +8,8 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,sans-serif}
 body{background:radial-gradient(circle at center, #1f140a 0%, #080706 100%);color:#f0f0f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
 .container{width:100%;max-width:400px;background:rgba(20, 16, 12, 0.88);backdrop-filter:blur(12px);padding:30px 22px;border-radius:18px;border:1px solid rgba(255, 120, 0, 0.35);box-shadow:0 15px 35px rgba(0,0,0,0.9), 0 0 25px rgba(255, 100, 0, 0.2)}
-.logo-container{text-align:center;margin-bottom:15px}
-.logo-img{width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid #ff8c00;box-shadow:0 0 20px rgba(255, 100, 0, 0.5)}
+.logo-container{text-align:center;margin-bottom:15px;display:flex;justify-content:center}
+.logo-img{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #ff8c00;box-shadow:0 0 20px rgba(255, 100, 0, 0.5)}
 .vip-badge{display:inline-block;background:linear-gradient(135deg, #ff8c00, #ff4500, #d4af37);color:#000;font-size:11px;font-weight:900;letter-spacing:1.5px;padding:4px 14px;border-radius:20px;text-transform:uppercase;margin-bottom:10px}
 h2{color:#fff;font-size:26px;font-weight:800;margin-bottom:20px;text-align:center;letter-spacing:1.5px;text-transform:uppercase}
 h2 span{color:#ff7700;text-shadow:0 0 10px rgba(255,119,0,0.6)}
@@ -20,13 +20,13 @@ button.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg, #f
 button.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(255, 100, 0, 0.6);background:linear-gradient(135deg, #ffa31a 0%, #ff4500 100%)}
 .link-btn{width:100%;background:transparent;border:none;color:#ff8c00;text-decoration:none;cursor:pointer;margin-top:16px;font-size:14px;transition:color 0.3s ease;display:block;text-align:center}
 .link-btn:hover{color:#fff;text-decoration:underline}
-#error-msg{color:#ff4d4d;text-align:center;margin-top:15px;font-size:14px;min-height:20px}
+#error-msg{color:#ff4d4d;text-align:center;margin-top:15px;font-size:13px;min-height:20px;line-height:1.4}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="logo-container">
-<img src="logo.jpg" alt="WILDFIRE Logo" class="logo-img">
+<img src="logo.jpg" alt="WILDFIRE" class="logo-img" onerror="this.onerror=null;this.src='logo.png';">
 </div>
 <div style="text-align:center;"><span class="vip-badge">VIP ACCESS</span></div>
 <h2>WILD<span>FIRE</span></h2>
@@ -46,9 +46,9 @@ let e = document.getElementById('email').value.trim();
 let p = document.getElementById('password').value.trim();
 let err = document.getElementById('error-msg');
 
-if((e === 'twanafx' || e === 'twanafx@gmail.com') && p === 'twanafx'){
+if((e === 'BEWAR' || e.toLowerCase() === 'bewar@gmail.com') && p === 'BEWAR'){
 localStorage.setItem('shahan_logged', 'admin');
-localStorage.setItem('shahan_user', 'twanafx');
+localStorage.setItem('shahan_user', 'BEWAR');
 window.location.href = 'dashboard.html';
 return;
 }
@@ -57,11 +57,19 @@ let users = JSON.parse(localStorage.getItem('shahan_users_db')) || [];
 let foundUser = users.find(u => (u.email === e || u.username === e) && u.password === p);
 
 if(foundUser){
+if(foundUser.status === 'pending'){
+err.innerText = 'ئەژمارەکەت لە چاوەڕوانی قبوڵکردنی ئەدمیندایە (Pending Admin Approval)';
+return;
+}
+if(foundUser.status === 'rejected'){
+err.innerText = 'ئەم ئەژمارە لەلایەن ئەدمینەوە ڕەتکراوەتەوە (Account Rejected)';
+return;
+}
 localStorage.setItem('shahan_logged', 'user');
 localStorage.setItem('shahan_user', foundUser.username);
 window.location.href = 'dashboard.html';
 } else {
-err.innerText = 'Invalid email/username or password';
+err.innerText = 'ئیمەیڵ/ناوی بەکارهێنەر یان وشەی تێپەڕ هەڵەیە';
 }
 }
 function goToSignup(){
