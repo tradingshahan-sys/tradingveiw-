@@ -3,51 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WILDFIRE - VIP Trading Dashboard</title>
-<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<title>WILDFIRE - VIP Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,sans-serif}
-body, html{width:100%;height:100%;background:#080706;color:#fff;overflow:hidden;display:flex;flex-direction:column}
-.admin-panel{background:rgba(20, 16, 12, 0.92);backdrop-filter:blur(10px);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255, 120, 0, 0.35);box-shadow:0 4px 20px rgba(0,0,0,0.8);z-index:10;width:100%}
+body, html{width:100%;min-height:100vh;background:#080706;color:#fff;display:flex;flex-direction:column}
+.header-bar{background:rgba(20, 16, 12, 0.95);backdrop-filter:blur(10px);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255, 120, 0, 0.35);box-shadow:0 4px 20px rgba(0,0,0,0.8);position:sticky;top:0;z-index:100}
 .brand-title{font-size:18px;font-weight:800;letter-spacing:1px;color:#fff;display:flex;align-items:center;gap:8px}
 .brand-title span{color:#ff7700;text-shadow:0 0 8px rgba(255,119,0,0.6)}
 .vip-tag{background:linear-gradient(135deg, #ff8c00, #ff4500);color:#000;font-size:10px;font-weight:900;padding:3px 8px;border-radius:12px;text-transform:uppercase}
-.flex-row{display:flex;gap:10px;align-items:center}
-.stat-box{font-size:14px;color:#d4af37;font-weight:600}
-.stat-box strong{color:#fff;font-size:16px}
-button{padding:8px 14px;border:none;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer;color:#fff;transition:all 0.3s ease}
-.btn-add{background:linear-gradient(135deg, #00c853, #009624);box-shadow:0 0 10px rgba(0,200,83,0.3)}
-.btn-add:hover{transform:scale(1.05)}
-.btn-rem{background:linear-gradient(135deg, #ff1744, #d50000);box-shadow:0 0 10px rgba(255,23,68,0.3)}
-.btn-rem:hover{transform:scale(1.05)}
-.btn-out{background:linear-gradient(135deg, #ff8c00, #e63900);box-shadow:0 0 12px rgba(255,140,0,0.4);letter-spacing:0.5px}
-.btn-out:hover{transform:scale(1.05);background:linear-gradient(135deg, #ffa31a, #ff4500)}
-#chart-container{flex:1;width:100%;height:100%}
+.btn-out{background:linear-gradient(135deg, #ff8c00, #e63900);border:none;padding:8px 16px;border-radius:8px;color:#fff;font-weight:bold;font-size:13px;cursor:pointer;box-shadow:0 0 12px rgba(255,140,0,0.4);transition:all 0.3s ease}
+.btn-out:hover{transform:scale(1.05)}
+.main-container{flex:1;padding:20px;max-width:900px;margin:0 auto;width:100%}
+.welcome-card{background:linear-gradient(145deg, rgba(30,22,15,0.9), rgba(15,12,9,0.95));border:1px solid rgba(255,140,0,0.3);border-radius:20px;padding:30px;text-align:center;box-shadow:0 15px 35px rgba(0,0,0,0.8), 0 0 25px rgba(255,100,0,0.15);margin-bottom:25px}
+.welcome-card h1{font-size:28px;margin-bottom:10px;color:#fff}
+.welcome-card h1 span{color:#ff7700}
+.welcome-card p{color:#ccc;font-size:15px;line-height:1.6;margin-bottom:20px}
+.status-pill{display:inline-block;background:rgba(0,230,118,0.15);border:1px solid #00e676;color:#00e676;padding:6px 16px;border-radius:20px;font-weight:bold;font-size:13px;margin-bottom:15px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:15px;margin-top:20px}
+.info-box{background:rgba(25,20,15,0.7);border:1px solid #33261c;border-radius:12px;padding:20px;text-align:center}
+.info-box h3{color:#ff8c00;font-size:16px;margin-bottom:8px}
+.info-box p{color:#fff;font-size:18px;font-weight:bold}
+.admin-section{background:rgba(18,14,10,0.9);border:1px solid rgba(255,140,0,0.3);border-radius:16px;padding:20px;margin-bottom:20px}
+.admin-section h2{color:#ff8c00;font-size:18px;margin-bottom:15px;border-bottom:1px solid #33261c;padding-bottom:10px}
+.user-table{width:100%;border-collapse:collapse;margin-top:10px}
+.user-table th, .user-table td{padding:12px;text-align:left;border-bottom:1px solid #282018;font-size:14px}
+.user-table th{color:#ff8c00;background:rgba(255,140,0,0.05)}
+.btn-act{padding:6px 12px;border:none;border-radius:6px;font-weight:bold;font-size:12px;cursor:pointer;margin-right:5px;color:#fff}
+.btn-approve{background:#00c853}
+.btn-reject{background:#ff1744}
+.btn-delete{background:#757575}
+.badge-pending{color:#ffab00;font-weight:bold}
+.badge-approved{color:#00e676;font-weight:bold}
 .hidden{display:none !important}
 </style>
 </head>
 <body>
-<div id="admin-box" class="admin-panel hidden">
+<div class="header-bar">
 <div class="brand-title">
-WILD<span>FIRE</span> <span class="vip-tag">ADMIN VIP</span>
-</div>
-<div class="flex-row">
-<span class="stat-box">VIP Members: <strong id="member-count">0</strong></span>
-<button class="btn-add" onclick="changeMembers(1)">+ Add</button>
-<button class="btn-rem" onclick="changeMembers(-1)">- Remove</button>
+WILD<span>FIRE</span> <span class="vip-tag" id="role-tag">VIP TERMINAL</span>
 </div>
 <button class="btn-out" onclick="logout()">Logout</button>
 </div>
-<div id="user-box" class="admin-panel hidden">
-<div class="brand-title">
-WILD<span>FIRE</span> <span class="vip-tag">VIP TERMINAL</span>
+<div class="main-container">
+<div id="user-view" class="hidden">
+<div class="welcome-card">
+<div class="status-pill">● ACTIVE VIP MEMBER</div>
+<h1>WELCOME TO <span>WILDFIRE VIP</span></h1>
+<p id="user-greeting">بەخێربێیت بۆ سەکۆی تایبەتی WILDFIRE. ئەژمارەکەت چالاك کراوە و ئامادەیە.</p>
 </div>
-<div class="flex-row">
-<span class="stat-box" id="welcome-msg">Welcome, VIP User</span>
-<button class="btn-out" onclick="logout()">Logout</button>
+<div class="info-grid">
+<div class="info-box">
+<h3>ACCOUNT STATUS</h3>
+<p style="color:#00e676;">APPROVED VIP</p>
+</div>
+<div class="info-box">
+<h3>VIP SIGNALS</h3>
+<p>COMING SOON</p>
+</div>
+<div class="info-box">
+<h3>MEMBER CLUB</h3>
+<p>WILDFIRE TRADING</p>
 </div>
 </div>
-<div id="chart-container"></div>
+</div>
+<div id="admin-view" class="hidden">
+<div class="admin-section">
+<h2>ADMIN PANEL - USER APPROVALS (BEWAR)</h2>
+<p style="color:#aaa;margin-bottom:15px;font-size:14px;">لێرەوە دەتوانیت سەرجەم ئەو ئەندامانە قبوڵ یان ڕەت بکەیتەوە کە خۆیان تۆمارکردووە:</p>
+<div style="overflow-x:auto;">
+<table class="user-table">
+<thead>
+<tr>
+<th>Username</th>
+<th>Email</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="user-list">
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
 <script>
 let status = localStorage.getItem('shahan_logged');
 let activeUser = localStorage.getItem('shahan_user') || 'User';
@@ -56,40 +95,59 @@ if(!status){
 window.location.href = 'index.html';
 }
 
-let members = localStorage.getItem('shahan_members') ? parseInt(localStorage.getItem('shahan_members')) : 150;
-
 if(status === 'admin'){
-document.getElementById('admin-box').classList.remove('hidden');
-updateMemberDisplay();
+document.getElementById('admin-view').classList.remove('hidden');
+document.getElementById('role-tag').innerText = 'ADMIN VIP';
+loadUsersList();
 } else {
-document.getElementById('user-box').classList.remove('hidden');
-document.getElementById('welcome-msg').innerText = 'Welcome, VIP ' + activeUser;
+document.getElementById('user-view').classList.remove('hidden');
+document.getElementById('user-greeting').innerText = 'بەخێربێیت  ' + activeUser + '  بۆ سەکۆی تایبەتی WILDFIRE. ئەژمارەکەت چالاککراوە و بەکارهێنەری تایبەتی VIP ییت.';
 }
 
-new TradingView.widget({
-"width": "100%",
-"height": "100%",
-"symbol": "OANDA:XAUUSD",
-"interval": "D",
-"timezone": "Etc/UTC",
-"theme": "dark",
-"style": "1",
-"locale": "en",
-"toolbar_bg": "#080706",
-"enable_publishing": false,
-"allow_symbol_change": true,
-"container_id": "chart-container"
+function loadUsersList(){
+let users = JSON.parse(localStorage.getItem('shahan_users_db')) || [];
+let listContainer = document.getElementById('user-list');
+listContainer.innerHTML = '';
+
+if(users.length === 0){
+listContainer.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;">هیچ بەکارهێنەرێک تۆمار نەکراوە</td></tr>';
+return;
+}
+
+users.forEach((u, index) => {
+let row = document.createElement('tr');
+let statusBadge = u.status === 'approved' ? '<span class="badge-approved">Approved</span>' : (u.status === 'rejected' ? '<span style="color:#ff1744;">Rejected</span>' : '<span class="badge-pending">Pending</span>');
+
+let actions = '';
+if(u.status === 'pending'){
+actions = '<button class="btn-act btn-approve" onclick="updateStatus('+index+', \'approved\')">Approve</button>' +
+'<button class="btn-act btn-reject" onclick="updateStatus('+index+', \'rejected\')">Reject</button>';
+} else if(u.status === 'approved'){
+actions = '<button class="btn-act btn-reject" onclick="updateStatus('+index+', \'rejected\')">Revoke</button>';
+} else {
+actions = '<button class="btn-act btn-approve" onclick="updateStatus('+index+', \'approved\')">Approve</button>';
+}
+actions += '<button class="btn-act btn-delete" onclick="deleteUser('+index+')">Delete</button>';
+
+row.innerHTML = '<td>'+u.username+'</td><td>'+u.email+'</td><td>'+statusBadge+'</td><td>'+actions+'</td>';
+listContainer.appendChild(row);
 });
-
-function changeMembers(val){
-members += val;
-if(members < 0) members = 0;
-localStorage.setItem('shahan_members', members);
-updateMemberDisplay();
 }
 
-function updateMemberDisplay(){
-document.getElementById('member-count').innerText = members;
+function updateStatus(index, newStatus){
+let users = JSON.parse(localStorage.getItem('shahan_users_db')) || [];
+users[index].status = newStatus;
+localStorage.setItem('shahan_users_db', JSON.stringify(users));
+loadUsersList();
+}
+
+function deleteUser(index){
+if(confirm('دڵنیایت لە سڕینەوەی ئەم بەکارهێنەرە؟')){
+let users = JSON.parse(localStorage.getItem('shahan_users_db')) || [];
+users.splice(index, 1);
+localStorage.setItem('shahan_users_db', JSON.stringify(users));
+loadUsersList();
+}
 }
 
 function logout(){
