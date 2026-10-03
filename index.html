@@ -8,8 +8,10 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Roboto,sans-serif}
 body{background:radial-gradient(circle at center, #1f140a 0%, #080706 100%);color:#f0f0f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
 .container{width:100%;max-width:400px;background:rgba(20, 16, 12, 0.88);backdrop-filter:blur(12px);padding:30px 22px;border-radius:18px;border:1px solid rgba(255, 120, 0, 0.35);box-shadow:0 15px 35px rgba(0,0,0,0.9), 0 0 25px rgba(255, 100, 0, 0.2)}
-.logo-container{text-align:center;margin-bottom:15px;display:flex;justify-content:center}
-.logo-img{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #ff8c00;box-shadow:0 0 20px rgba(255, 100, 0, 0.5)}
+.logo-container{display:flex;justify-content:center;align-items:center;margin-bottom:15px}
+.logo-box{width:110px;height:110px;border-radius:50%;border:2px solid #ff8c00;box-shadow:0 0 20px rgba(255, 100, 0, 0.5);overflow:hidden;display:flex;justify-content:center;align-items:center;background:rgba(12, 10, 8, 0.9);position:relative}
+.logo-img{width:100%;height:100%;object-fit:cover;display:block}
+.logo-fallback{font-size:45px;line-height:1;display:none;align-items:center;justify-content:center;width:100%;height:100%}
 .vip-badge{display:inline-block;background:linear-gradient(135deg, #ff8c00, #ff4500, #d4af37);color:#000;font-size:11px;font-weight:900;letter-spacing:1.5px;padding:4px 14px;border-radius:20px;text-transform:uppercase;margin-bottom:10px}
 h2{color:#fff;font-size:26px;font-weight:800;margin-bottom:20px;text-align:center;letter-spacing:1.5px;text-transform:uppercase}
 h2 span{color:#ff7700;text-shadow:0 0 10px rgba(255,119,0,0.6)}
@@ -26,7 +28,10 @@ button.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(2
 <body>
 <div class="container">
 <div class="logo-container">
-<img src="logo.jpg" alt="WILDFIRE" class="logo-img" onerror="this.onerror=null;this.src='logo.png';">
+<div class="logo-box">
+<img src="IMG-20260921-WA0013.jpg" alt="WILDFIRE" class="logo-img" id="main-logo" onerror="handleLogoError()">
+<div class="logo-fallback" id="logo-fallback">🔥</div>
+</div>
 </div>
 <div style="text-align:center;"><span class="vip-badge">VIP ACCESS</span></div>
 <h2>WILD<span>FIRE</span></h2>
@@ -41,6 +46,12 @@ button.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(2
 <p id="error-msg"></p>
 </div>
 <script>
+function handleLogoError(){
+let img = document.getElementById('main-logo');
+let fallback = document.getElementById('logo-fallback');
+if(img) img.style.display = 'none';
+if(fallback) fallback.style.display = 'flex';
+}
 function login(){
 let e = document.getElementById('email').value.trim();
 let p = document.getElementById('password').value.trim();
